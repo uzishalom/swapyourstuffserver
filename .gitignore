@@ -4,3 +4,6 @@
 /node_modules
 /config/mongodb.config.js
 /config/default.json
+
+# vscode
+/.vscode

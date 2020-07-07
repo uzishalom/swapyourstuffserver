@@ -78,10 +78,11 @@ const getUser = async (req, res) => {
 
 const validateUser = (user) => {
     const schema = joi.object({
-        name: joi.string().min(2).max(255).required(),
-        email: joi.string().min(6).max(255).required().email(),
-        password: joi.string().min(6).max(1024).required(),
-        biz: joi.boolean().required()
+        name: joi.string().required().min(4).max(25).label("Name"),
+        email: joi.string().required().email().label("Email"),
+        password: joi.string().required().min(6).max(10).label("Password"),
+        city: joi.string().required().label("City"),
+        phone: joi.any()
     })
 
     return schema.validate(user, {
