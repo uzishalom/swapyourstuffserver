@@ -13,7 +13,7 @@ const userSchema = mongodbModel.Schema({
     email: {
         type: String,
         required: true,
-        minlength: 6,
+        minlength: 5,
         maxlength: 255,
         unique: true
     },
@@ -32,7 +32,6 @@ const userSchema = mongodbModel.Schema({
     },
     phone: {
         type: String,
-        minlength: 1,
         maxlength: 25
     },
     createdAt: {

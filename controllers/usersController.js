@@ -1,5 +1,5 @@
 const userModel = require("../models/userModel");
-const joi = require("@hapi/joi");
+const Joi = require("joi-browser");
 const bcrypt = require("bcrypt");
 const _ = require("loadsh");
 
@@ -9,7 +9,7 @@ const addUser = async (req, res) => {
 
     // input validation 
     let result = validateUser(userToAdd);
-    if ("error" in result) {
+    if ("error" in result && result.error && "details" in result.error) {
         let errorDetails_ar = result.error.details.map(item => {
             let {
                 type,
@@ -73,16 +73,18 @@ const getUser = async (req, res) => {
 }
 
 
-// add cards to a user
-
-
 const validateUser = (user) => {
-    const schema = joi.object({
-        name: joi.string().required().min(4).max(25).label("Name"),
-        email: joi.string().required().email().label("Email"),
-        password: joi.string().required().min(6).max(10).label("Password"),
-        city: joi.string().required().label("City"),
-        phone: joi.string()
+    const schema = Joi.object({
+        name: Joi.string().required().min(4).max(25).label("Name"),
+        email: Joi.string().required().email().label("Email"),
+        password: Joi.string().required().min(6).max(10).label("Password"),
+        city: Joi.string().required().label("City"),
+        phone: Joi.string().min(9).max(10).regex(/^0[2-9]\d{7,8}$/).allow("").error(() => {
+            return {
+                message: "Phone must be between 9-10 digits and starting with 0"
+            };
+        }),
+
     })
 
     return schema.validate(user, {

@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 const _ = require("loadsh");
-const joi = require("@hapi/joi");
+const Joi = require("joi-browser");
 const userModel = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 const config = require("config");
@@ -13,14 +13,24 @@ const authenticateUser = async (req, res) => {
 
     // input validation 
     let result = validateLoginInput(loginDetails);
-    if ("error" in result) {
-        console.log(result.error.details[0].message);
-        console.log(result.error.details[0].type);
+    if ("error" in result && result.error && "details" in result.error) {
+        let errorDetails_ar = result.error.details.map(item => {
+            let {
+                type,
+                message
+            } = item;
+            console.log("validation error type => ", type, "\nValaidation error message => ", message);
+            return {
+                "type": type,
+                "message": message
+            }
+        })
         res.status(400).json({
-            "error": "INVALID_PARAMETERS"
+            "error": errorDetails_ar
         });
         return;
     }
+
 
     // check if email exists
     let user = await userModel.getUserByEmail(loginDetails.email);
@@ -72,9 +82,9 @@ const checkUserAuthentication = (req, res, next) => {
 
 
 const validateLoginInput = (loginDetails) => {
-    const schema = joi.object({
-        email: joi.string().min(6).max(255).required().email(),
-        password: joi.string().min(6).max(1024).required(),
+    const schema = Joi.object({
+        email: Joi.string().required().email().label("Email"),
+        password: Joi.string().required().min(6).max(10).label("Password"),
     })
     return schema.validate(loginDetails, {
         abortEarly: false
@@ -85,3 +95,4 @@ module.exports = {
     authenticateUser,
     checkUserAuthentication
 }
+
