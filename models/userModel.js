@@ -82,7 +82,7 @@ const addUser = async (userObj,) => {
 const updateUser = async (userToUpdate) => {
     let result = await User.findOneAndUpdate({
         _id: userToUpdate._id
-    }, userToUpdate);
+    }, userToUpdate, { new: true });
     console.log("result of user update => \n" + result);
     return result;
 }

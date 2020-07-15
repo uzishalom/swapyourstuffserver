@@ -21,6 +21,13 @@ router.get("/me", (req, res) => {
 
 })
 
+router.put("/updateUser", (req, res) => {
+    authController.checkUserAuthentication(req, res, (req1, res1) => {
+        usersController.updateUser(req1, res1);
+    })
+
+})
+
 router.put("/forgotpassword", (req, res) => {
     usersController.forgotPassword(req, res);
 })
