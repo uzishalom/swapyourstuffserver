@@ -166,6 +166,14 @@ const changeUserPassword = async (req, res) => {
         return;
     }
 
+    let currentUserDetails = await userModel.getUserById(userToUpdate._id);
+    if (currentUserDetails == null) {
+        res.status(400).json({
+            "error": "NO_USER"
+        });
+        return;
+    }
+
     userToUpdate.password = await getEncryptedPassword(userToUpdate.password);
 
     let updatedUser = await userModel.updateUser(userToUpdate);
@@ -283,4 +291,5 @@ module.exports = {
     getUser,
     forgotPassword,
     updateUser,
+    changeUserPassword,
 }
