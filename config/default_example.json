@@ -1,3 +1,7 @@
 {
-    "jwtKey": ""
+    "jwtKey": "xxxxxxxx",
+    "sendEmailServiceName": "gmail",
+    "sendEmailUsername": "xxxxxxx@gmail.com",
+    "sendEmailPassword": "xxxxxxxxx",
+    "sendEmailFromEmail": "xxxxxx@xxxxxxx.com"
 }

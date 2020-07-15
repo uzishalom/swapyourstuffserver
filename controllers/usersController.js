@@ -2,6 +2,7 @@ const userModel = require("../models/userModel");
 const Joi = require("joi-browser");
 const bcrypt = require("bcrypt");
 const _ = require("loadsh");
+const sendEmail = require("./mailController");
 
 const addUser = async (req, res) => {
 
@@ -99,8 +100,45 @@ const getEncryptedPassword = async (password) => {
     return encrypredPassword;
 }
 
+const forgotPassword = async (req, res) => {
+
+    if (!req.body.email) {
+        res.status(400).json({ "error": "NO_EMAIL" });
+        return;
+    }
+
+    const user = await userModel.getUserByEmail(req.body.email);
+    if (user == null) {
+        res.status(400).json({ "error": "NO_USER" })
+        return
+    }
+
+    const newPassword = Math.floor(100000000 + Math.random() * 800000000).toString();
+    user.password = await getEncryptedPassword(newPassword);
+    const userWithUpdatedPassword = await userModel.updateUser(user);
+    if (userWithUpdatedPassword == null) {
+        res.status(500).json({ "error": "Password_Save_Failed" });
+        return;
+    }
+
+    const subject = "Your Swap Your Stuff Password";
+    const message = `Hello ${user.name}, We have created a new password for you : ${newPassword} \n.
+    Please login with this password and change it to a new one in the "User Details" section.`
+
+    sendEmail(user.email, subject, message, (error, result) => {
+        if (error) {
+            console.log(error);
+            res.status(500).json({ "error": "Email_Send_Failed" });
+        } else {
+            console.log('Email sent: ' + result.response);
+            res.json({ "status": "ok" })
+        }
+    });
+}
+
 
 module.exports = {
     addUser,
     getUser,
+    forgotPassword,
 }

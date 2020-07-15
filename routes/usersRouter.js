@@ -21,5 +21,9 @@ router.get("/me", (req, res) => {
 
 })
 
+router.put("/forgotpassword", (req, res) => {
+    usersController.forgotPassword(req, res);
+})
+
 
 module.exports = router;
