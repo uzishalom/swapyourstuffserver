@@ -38,9 +38,10 @@ const userSchema = mongodbModel.Schema({
         type: Date,
         default: Date.now
     },
-    stuff: {
-        type: Array
-    }
+    lastUpdatedAt: {
+        type: Date,
+        default: Date.now
+    },
 }, {
     collection: "users"
 });
@@ -80,6 +81,7 @@ const addUser = async (userObj,) => {
 }
 
 const updateUser = async (userToUpdate) => {
+    userToUpdate.lastUpdatedAt = Date.now;
     let result = await User.findOneAndUpdate({
         _id: userToUpdate._id
     }, userToUpdate, { new: true });

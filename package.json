@@ -20,6 +20,7 @@
     "loadsh": "0.0.4",
     "mongoose": "^5.9.22",
     "morgan": "~1.9.1",
+    "multer": "^1.4.2",
     "nodemailer": "^6.4.10"
   }
 }
