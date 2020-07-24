@@ -54,7 +54,11 @@ const validateItem = (item) => {
     const schema = Joi.object({
         title: Joi.string().required().min(2).max(50).label("Title"),
         description: Joi.string().required().min(5).max(4000).label("Description"),
-        categoryId: Joi.string().required().min(1).max(4000).label("CategoryId"),
+        categoryId: Joi.string().required().min(1).max(4000).error(() => {
+            return {
+                message: "Please Choose Category"
+            };
+        }),
         image: Joi.any()
     })
 
