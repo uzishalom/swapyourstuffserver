@@ -3,5 +3,6 @@
     "sendEmailServiceName": "gmail",
     "sendEmailUsername": "xxxxxxx@gmail.com",
     "sendEmailPassword": "xxxxxxxxx",
-    "sendEmailFromEmail": "xxxxxx@xxxxxxx.com"
+    "sendEmailFromEmail": "xxxxxx@xxxxxxx.com",
+    "itemsImagesFolder": "images"
 }

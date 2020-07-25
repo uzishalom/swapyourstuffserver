@@ -50,6 +50,22 @@ const addItem = async (req, res) => {
 
 }
 
+const setImageItem = async (itemId, imagePath) => {
+
+    let item = await itemModel.getItemById(itemId);
+    if (item == null) {
+        return false;
+    }
+
+    item.image = imagePath;
+
+    let updatedItem = await itemModel.updateItem(item);
+    return updatedItem != null;
+
+}
+
+
+
 const validateItem = (item) => {
     const schema = Joi.object({
         title: Joi.string().required().min(2).max(50).label("Title"),
@@ -70,6 +86,7 @@ const validateItem = (item) => {
 
 module.exports = {
     addItem,
+    setImageItem,
 }
 
 

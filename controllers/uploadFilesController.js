@@ -1,13 +1,17 @@
 var multer = require("multer");
 var path = require("path");
+var config = require("config");
+var itemsController = require("./itemsController");
+
+
 
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'public/usersItemsImages')
+        cb(null, "public/" + config.get("itemsImagesFolder"));
     },
     filename: function (req, file, cb) {
-        cb(null, req.user._id, +  path.extname(file.originalname));
+        cb(null, req.header("itemId") + path.extname(file.originalname));
     }
 })
 
@@ -17,7 +21,7 @@ const upload = multer({
     fileFilter: function (req, file, cb) {
         checkFileType(file, cb);
     }
-}).single(''); // single is the text that the file name will start with. 
+}).single("file"); // single is the text that the file name will start with. 
 
 // Check File Type
 function checkFileType(file, cb) {
@@ -48,9 +52,22 @@ const uploadItemImage = (req, res) => {
                 res.status(400).json({ "error": "UPLOAD_NO_FILE" });
                 return;
             } else {
-                res.json({ "status": "ok" })
+                updateImageForItem(req, res);
                 return;
             }
         }
     });
 }
+
+const updateImageForItem = (req, res) => {
+    const itemId = req.header("itemId");
+    const imagePath = config.get("itemsImagesFolder") + "/" + req.header("itemId") + req.header("fileExt");
+    let result = itemsController.setImageItem(itemId, imagePath);
+    if (!result) {
+        res.status(500).json({ "error": "UPDATING_IMAGE_TO_ITEM" });
+        return;
+    }
+    res.json({ "status": "ok" });
+}
+
+module.exports = uploadItemImage;
