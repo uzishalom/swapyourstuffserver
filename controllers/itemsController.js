@@ -3,6 +3,23 @@ const categoriesController = require("./categoriesController");
 const Joi = require("joi-browser");
 const _ = require("loadsh");
 
+
+const getUserItems = async (req, res) => {
+    const result = await itemModel.getUserItems(req.user._id);
+    if (result == null) {
+        res.status(500).json({
+            "error": "SERVER_ERROR"
+        });
+        return;
+    }
+
+    res.json({
+        userItems: result
+    });
+
+}
+
+
 const addItem = async (req, res) => {
 
     let itemToAdd = _.pick(req.body, ["title", "description", "categoryId", "image"]);
@@ -65,7 +82,6 @@ const setImageItem = async (itemId, imagePath) => {
 }
 
 
-
 const validateItem = (item) => {
     const schema = Joi.object({
         title: Joi.string().required().min(2).max(50).label("Title"),
@@ -87,6 +103,7 @@ const validateItem = (item) => {
 module.exports = {
     addItem,
     setImageItem,
+    getUserItems,
 }
 
 

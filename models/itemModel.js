@@ -57,6 +57,12 @@ const getItemById = async (itemId) => {
     return result;
 }
 
+const getUserItems = async (userId) => {
+    let result = await Item.find({ userId: userId });
+    console.log("Get user items => \n", result)
+    return result;
+}
+
 
 const addItem = async (itemObj,) => {
     let item = new Item(itemObj);
@@ -78,5 +84,6 @@ module.exports = {
     getItemById,
     addItem,
     updateItem,
+    getUserItems,
 }
 
