@@ -78,6 +78,26 @@ const getUser = async (req, res) => {
 
 }
 
+const getUserById = async (req, res) => {
+    if (req.user == null) {
+        res.status(400).json({
+            "error": "USER_NOT_AUTHENTICATED"
+        });
+        return;
+    }
+
+    let user = await userModel.getUserById(req.params.id)
+    if (user == null) {
+        res.status(400).json({
+            "error": "USER_NOT_FOUND"
+        });
+        return;
+    }
+
+    res.json(user);
+
+}
+
 const updateUser = async (req, res) => {
 
     let userToUpdate = _.pick(req.body, ["_id", "name", "email", "city", "phone"]);
@@ -289,6 +309,7 @@ const forgotPassword = async (req, res) => {
 module.exports = {
     addUser,
     getUser,
+    getUserById,
     forgotPassword,
     updateUser,
     changeUserPassword,

@@ -10,16 +10,25 @@ router.get("/", (req, res) => {
     res.status(404).send("*** 404 NOT FOUND 404 ***");
 })
 
-router.post("/adduser", (req, res) => {
-    usersController.addUser(req, res);
-});
-
 router.get("/me", (req, res) => {
     authController.checkUserAuthentication(req, res, (req1, res1) => {
         usersController.getUser(req1, res1);
     })
 
 })
+
+router.get("/:id", (req, res) => {
+    authController.checkUserAuthentication(req, res, (req1, res1) => {
+        usersController.getUserById(req1, res1);
+    })
+
+})
+
+router.post("/adduser", (req, res) => {
+    usersController.addUser(req, res);
+});
+
+
 
 router.put("/updateUser", (req, res) => {
     authController.checkUserAuthentication(req, res, (req1, res1) => {
