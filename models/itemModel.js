@@ -58,7 +58,14 @@ const getItemById = async (itemId) => {
 }
 
 const getUserItems = async (userId) => {
-    let result = await Item.find({ userId: userId });
+    let result = await Item.find({ userId: userId }, [], {
+        skip: 0,
+        limit: 100,
+        sort: {
+            lastUpdatedAt: -1 //Sort by Date Added DESC
+        }
+    }
+    );
     console.log("Get user items => \n", result)
     return result;
 }
