@@ -19,7 +19,6 @@ const Category = mongodbModel.model("Category", categorySchema);
 const getCategories = async () => {
     if (!categories) {
         categories = await Category.find();
-        console.log("Get Categories => \n", categories)
     }
     return categories;
 }

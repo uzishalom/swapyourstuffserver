@@ -9,7 +9,6 @@ router.get("/useritems", (req, res) => {
     authController.checkUserAuthentication(req, res, (req1, res1) => {
         itemsController.getUserItems(req1, res1);
     })
-
 })
 
 
@@ -17,14 +16,19 @@ router.post("/additem", (req, res) => {
     authController.checkUserAuthentication(req, res, (req1, res1) => {
         itemsController.addItem(req1, res1);
     })
-
 })
 
-router.post("/uploaditemimage", (req, res) => {
+router.put("/updateitem", (req, res) => {
+    authController.checkUserAuthentication(req, res, (req1, res1) => {
+        itemsController.updateItem(req1, res1);
+    })
+})
+
+
+router.put("/uploaditemimage", (req, res) => {
     authController.checkUserAuthentication(req, res, (req1, res1) => {
         uploadItemImage(req1, res1);
     })
-
 })
 
 

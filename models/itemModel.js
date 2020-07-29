@@ -53,7 +53,6 @@ const Item = mongodbModel.model("Item", itemSchema);
 
 const getItemById = async (itemId) => {
     let result = await Item.findById(itemId);
-    console.log("Get item by id => \n", result)
     return result;
 }
 
@@ -66,7 +65,6 @@ const getUserItems = async (userId) => {
         }
     }
     );
-    console.log("Get user items => \n", result)
     return result;
 }
 
@@ -74,16 +72,14 @@ const getUserItems = async (userId) => {
 const addItem = async (itemObj,) => {
     let item = new Item(itemObj);
     let result = await item.save();
-    console.log("result of item.save => \n" + result);
     return "id" in result ? result.id : null;
 }
 
 const updateItem = async (itemToUpdate) => {
-    itemToUpdate.lastUpdatedAt = Date.now;
+    itemToUpdate.lastUpdatedAt = Date.now();
     let result = await Item.findOneAndUpdate({
         _id: itemToUpdate._id
     }, itemToUpdate, { new: true });
-    console.log("result of item.update => \n" + result);
     return result;
 }
 

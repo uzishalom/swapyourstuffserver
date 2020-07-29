@@ -39,7 +39,7 @@ function checkFileType(file, cb) {
     }
 }
 
-const uploadItemImage = (req, res) => {
+const uploadItemImage = async (req, res) => {
 
     upload(req, res, (err) => {
         if (err) {
@@ -59,10 +59,10 @@ const uploadItemImage = (req, res) => {
     });
 }
 
-const updateImageForItem = (req, res) => {
+const updateImageForItem = async (req, res) => {
     const itemId = req.header("itemId");
     const imagePath = config.get("itemsImagesFolder") + "/" + req.header("itemId") + req.header("fileExt");
-    let result = itemsController.setImageItem(itemId, imagePath);
+    let result = await itemsController.setImageItem(itemId, imagePath);
     if (!result) {
         res.status(500).json({ "error": "UPDATING_IMAGE_TO_ITEM" });
         return;

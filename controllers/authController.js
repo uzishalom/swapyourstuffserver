@@ -42,7 +42,6 @@ const authenticateUser = async (req, res) => {
     }
 
     let isPasswordOK = await bcrypt.compare(loginDetails.password, user.password);
-    console.log("Password Authentication => \n", isPasswordOK)
 
     if (isPasswordOK) {
         res.json({

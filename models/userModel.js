@@ -60,13 +60,11 @@ const getUserByEmail = async (emailAddress) => {
     let result = await User.findOne({
         email: emailAddress
     })
-    console.log("get by email result => " + result);
     return result;
 }
 
 const getUserById = async (userId) => {
     let result = await User.findById(userId);
-    console.log("Get user by id => \n", result)
     return result;
 }
 
@@ -75,17 +73,15 @@ const getUserById = async (userId) => {
 const addUser = async (userObj,) => {
     let user = new User(userObj);
     let result = await user.save();
-    console.log("result of user.save => \n" + result);
     return "id" in result ? result.id : null;
 
 }
 
 const updateUser = async (userToUpdate) => {
-    userToUpdate.lastUpdatedAt = Date.now;
+    userToUpdate.lastUpdatedAt = Date.now();
     let result = await User.findOneAndUpdate({
         _id: userToUpdate._id
     }, userToUpdate, { new: true });
-    console.log("result of user update => \n" + result);
     return result;
 }
 

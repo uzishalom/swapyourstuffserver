@@ -8,7 +8,8 @@ const fullUrl = `mongodb+srv://${username}:${password}@${clusterUrl}/${dbName}?r
 const parameters = {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    useCreateIndex: true
+    useCreateIndex: true,
+    useFindAndModify: false,
 }
 
 module.exports = {
