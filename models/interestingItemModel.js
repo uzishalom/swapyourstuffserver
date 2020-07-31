@@ -29,11 +29,8 @@ const interestingItemSchema = mongodbModel.Schema({
 const InterestingItem = mongodbModel.model("InterestingItem", interestingItemSchema);
 
 const addInterestingItems = async (interestingItemObjs) => {
-    interestingItemsToAdd = [];
-    foreach(interestingItem in interestingItemObjs)
-    {
-        interestingItemsToAdd.push(new InterestingItem(interestingItem))
-    }
+    let interestingItemsToAdd = interestingItemObjs.map(interestingItem => new InterestingItem(interestingItem));
+
     let result = await InterestingItem.insertMany(interestingItemsToAdd);
     return result;
 }

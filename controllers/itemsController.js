@@ -19,6 +19,27 @@ const getUserItems = async (req, res) => {
 
 }
 
+const getUserUnswappedItems = async (req, res) => {
+    const result = await itemModel.getUserUnswappedItems(req.user._id);
+    if (result == null) {
+        res.status(500).json({
+            "error": "SERVER_ERROR"
+        });
+        return;
+    }
+
+    res.json({
+        userItems: result
+    });
+
+}
+
+const getItemsByIds = async (itemIds) => {
+    return await itemModel.getItemsByIds(itemIds);
+}
+
+
+
 
 const addItem = async (req, res) => {
 
@@ -180,6 +201,8 @@ module.exports = {
     updateItem,
     setImageItem,
     getUserItems,
+    getUserUnswappedItems,
+    getItemsByIds
 }
 
 

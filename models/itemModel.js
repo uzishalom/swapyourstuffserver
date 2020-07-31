@@ -56,8 +56,25 @@ const getItemById = async (itemId) => {
     return result;
 }
 
+const getItemsByIds = async (itemIds) => {
+    let result = await Item.find({ _id: { $in: [[...itemIds]] } });
+    return result;
+}
+
 const getUserItems = async (userId) => {
     let result = await Item.find({ userId: userId }, [], {
+        skip: 0,
+        limit: 100,
+        sort: {
+            lastUpdatedAt: -1 //Sort by Date Added DESC
+        }
+    }
+    );
+    return result;
+}
+
+const getUserUnswappedItems = async (userId) => {
+    let result = await Item.find({ userId: userId, swapped: false }, [], {
         skip: 0,
         limit: 100,
         sort: {
@@ -88,5 +105,7 @@ module.exports = {
     addItem,
     updateItem,
     getUserItems,
+    getUserUnswappedItems,
+    getItemsByIds
 }
 

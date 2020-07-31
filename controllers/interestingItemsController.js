@@ -1,7 +1,25 @@
 const interestingItemModel = require("../models/interestingItemModel");
+const itemsController = require("./itemsController");
 
 const addInterestingItems = async (req, res) => {
-    let insertedInterestingItems = await interestingItemModel.addInterestingItems(req.body.insertingItems);
+
+    // Prepare Interesting Items Objects
+    let interestingItemsToSave = req.body;
+    const itemIds = interestingItemsToSave.map(interestingItem => interestingItem.itemId);
+    const items = await itemsController.getItemsByIds(itemIds);
+
+    let itemIdsToUserIds = [];
+    items.forEach(item => {
+        itemIdsToUserIds[item._id] = item.userId;
+    })
+
+    interestingItemsToSave.forEach(interestingItem => {
+        interestingItem.itemUserId = itemIdsToUserIds[interestingItem.itemId];
+        interestingItem.interestedUserId = req.user._id
+    })
+
+    // Save to DB
+    let insertedInterestingItems = await interestingItemModel.addInterestingItems(interestingItemsToSave);
     if (insertedInterestingItems == null) {
         res.status(500).json({
             "error": "SERVER_ERROR"

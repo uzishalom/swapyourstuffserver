@@ -12,6 +12,12 @@ router.get("/useritems", (req, res) => {
     })
 })
 
+router.get("/userunswappeditems", (req, res) => {
+    authController.checkUserAuthentication(req, res, (req1, res1) => {
+        itemsController.getUserUnswappedItems(req1, res1);
+    })
+})
+
 router.get("/userinterestingitems", (req, res) => {
     authController.checkUserAuthentication(req, res, (req1, res1) => {
         interestingItemsController.getUserInterestingItems(req1, res1);
