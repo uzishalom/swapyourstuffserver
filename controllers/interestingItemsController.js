@@ -31,7 +31,8 @@ const addInterestingItems = async (req, res) => {
 }
 
 const deleteInterestingItemsForUser = async (req, res) => {
-    let result = await interestingItemModel.deleteInterestingItemsForUser(req.body.itemIds, req.user._id);
+    let itemIdsToDelete = req.params.itemIds.split("-");
+    let result = await interestingItemModel.deleteInterestingItemsForUser(itemIdsToDelete, req.user._id);
     if (result == null) {
         res.status(500).json({
             "error": "SERVER_ERROR"

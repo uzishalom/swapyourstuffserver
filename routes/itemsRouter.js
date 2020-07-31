@@ -57,7 +57,7 @@ router.put("/uploaditemimage", (req, res) => {
     })
 })
 
-router.delete("/deleteinterestingitems", (req, res) => {
+router.delete("/deleteinterestingitems/:itemIds", (req, res) => {
     authController.checkUserAuthentication(req, res, (req1, res1) => {
         interestingItemsController.deleteInterestingItemsForUser(req1, res1);
     })
