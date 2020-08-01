@@ -30,6 +30,12 @@ router.get("/allinterestedforitem", (req, res) => {
     })
 })
 
+router.get("/itemstosearch", (req, res) => {
+    authController.checkUserAuthentication(req, res, (req1, res1) => {
+        itemsController.getUserNotInterestingItems(req1, res1);
+    })
+})
+
 
 router.post("/additem", (req, res) => {
     authController.checkUserAuthentication(req, res, (req1, res1) => {

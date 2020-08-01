@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const mongodbModel = require("./mongodbModel");
+const interestingItemModel = require("./interestingItemModel");
 
 const itemSchema = mongodbModel.Schema({
     title: {
@@ -57,12 +58,31 @@ const getItemById = async (itemId) => {
 }
 
 const getItemsByIds = async (itemIds) => {
-    let result = await Item.find({ _id: { $in: [[...itemIds]] } });
+    let itemIdsAsObjectIds = itemIds.map(itemId => mongoose.Types.ObjectId(itemId));
+
+    let result = await Item.find({ _id: { $in: [...itemIdsAsObjectIds] } });
     return result;
 }
 
 const getUserItems = async (userId) => {
     let result = await Item.find({ userId: userId }, [], {
+        skip: 0,
+        limit: 100,
+        sort: {
+            lastUpdatedAt: -1 //Sort by Date Added DESC
+        }
+    }
+    );
+    return result;
+}
+
+//
+const getUserNotInterestingItems = async (userId) => {
+
+    let userInterestingItems = await interestingItemModel.getUserInterestingItems(userId);
+    let userInterestingItemsIds = userInterestingItems.map(interestingItem => interestingItem.itemId);
+
+    let result = await Item.find({ userId: { $ne: userId }, swapped: false, _id: { $nin: [...userInterestingItemsIds] } }, [], {
         skip: 0,
         limit: 100,
         sort: {
@@ -106,6 +126,7 @@ module.exports = {
     updateItem,
     getUserItems,
     getUserUnswappedItems,
-    getItemsByIds
+    getItemsByIds,
+    getUserNotInterestingItems
 }
 
