@@ -18,11 +18,6 @@ router.get("/userunswappeditems", (req, res) => {
     })
 })
 
-router.get("/userinterestingitems", (req, res) => {
-    authController.checkUserAuthentication(req, res, (req1, res1) => {
-        interestingItemsController.getUserInterestingItems(req1, res1);
-    })
-})
 
 router.get("/allinterestedforitem", (req, res) => {
     authController.checkUserAuthentication(req, res, (req1, res1) => {
@@ -33,6 +28,12 @@ router.get("/allinterestedforitem", (req, res) => {
 router.get("/itemstosearch", (req, res) => {
     authController.checkUserAuthentication(req, res, (req1, res1) => {
         itemsController.getUserNotInterestingItems(req1, res1);
+    })
+})
+
+router.get("/userinterestingitems", (req, res) => {
+    authController.checkUserAuthentication(req, res, (req1, res1) => {
+        itemsController.getUserInterestingItems(req1, res1);
     })
 })
 

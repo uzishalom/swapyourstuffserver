@@ -38,8 +38,8 @@ const getItemsByIds = async (itemIds) => {
     return await itemModel.getItemsByIds(itemIds);
 }
 
-const getUserNotInterestingItems = async (req, res) => {
-    const result = await itemModel.getUserNotInterestingItems(req.user._id);
+const getUserInterestingItems = async (req, res) => {
+    const result = await itemModel.getUserInterestingItems(req.user._id);
     if (result == null) {
         res.status(500).json({
             "error": "SERVER_ERROR"
@@ -54,11 +54,20 @@ const getUserNotInterestingItems = async (req, res) => {
 }
 
 
+const getUserNotInterestingItems = async (req, res) => {
+    const result = await itemModel.getUserNotInterestingItems(req.user._id);
+    if (result == null) {
+        res.status(500).json({
+            "error": "SERVER_ERROR"
+        });
+        return;
+    }
 
+    res.json({
+        items: result
+    });
 
-
-
-
+}
 
 
 const addItem = async (req, res) => {
@@ -223,7 +232,8 @@ module.exports = {
     getUserItems,
     getUserUnswappedItems,
     getItemsByIds,
-    getUserNotInterestingItems
+    getUserInterestingItems,
+    getUserNotInterestingItems,
 }
 
 

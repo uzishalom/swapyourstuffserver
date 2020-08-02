@@ -36,7 +36,7 @@ const addInterestingItems = async (interestingItemObjs) => {
 }
 
 const deleteInterestingItemsForUser = async (itemIds, userId) => {
-    let result = await InterestingItem.deleteMany({ itemId: { $in: itemIds }, interestedUserId: userId });
+    let result = await InterestingItem.deleteMany({ itemId: { $in: [...itemIds] }, interestedUserId: userId });
     return result;
 }
 

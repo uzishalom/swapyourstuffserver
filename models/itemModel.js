@@ -76,7 +76,22 @@ const getUserItems = async (userId) => {
     return result;
 }
 
-//
+const getUserInterestingItems = async (userId) => {
+
+    let userInterestingItems = await interestingItemModel.getUserInterestingItems(userId);
+    let userInterestingItemsIds = userInterestingItems.map(interestingItem => interestingItem.itemId);
+
+    let result = await Item.find({ userId: { $ne: userId }, swapped: false, _id: { $in: [...userInterestingItemsIds] } }, [], {
+        skip: 0,
+        limit: 100,
+        sort: {
+            lastUpdatedAt: -1 //Sort by Date Added DESC
+        }
+    }
+    );
+    return result;
+}
+
 const getUserNotInterestingItems = async (userId) => {
 
     let userInterestingItems = await interestingItemModel.getUserInterestingItems(userId);
@@ -127,6 +142,7 @@ module.exports = {
     getUserItems,
     getUserUnswappedItems,
     getItemsByIds,
-    getUserNotInterestingItems
+    getUserInterestingItems,
+    getUserNotInterestingItems,
 }
 
