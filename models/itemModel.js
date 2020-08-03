@@ -148,6 +148,11 @@ const updateNumOfInterestedUsers = async (itemIds, add) => {
     return result;
 }
 
+const deleteItem = async (itemId) => {
+    let result = await Item.deleteOne({ _id: itemId });
+    return result;
+}
+
 
 
 module.exports = {
@@ -155,6 +160,7 @@ module.exports = {
     addItem,
     updateItem,
     updateNumOfInterestedUsers,
+    deleteItem,
     getUserItems,
     getUserUnswappedItems,
     getItemsByIds,

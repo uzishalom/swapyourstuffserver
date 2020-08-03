@@ -292,12 +292,54 @@ const updateNumOfInterestedUsers = async (itemIds, add) => {
     await itemModel.updateNumOfInterestedUsers(itemIds, add);
 }
 
+const deleteItem = async (req, res) => {
+    itemId = req.params.id;
+
+    let items = await getItemsByIds([itemId]);
+
+    if (!items || items.length == 0) {
+        res.status(400).json({
+            "error": "NO_ITEM"
+        });
+        return;
+    }
+
+    let item = items[0];
+
+    if (item.userId != req.user._id) {
+        res.status(401).json({
+            "error": "ACCESS_DENIED"
+        });
+        return;
+    }
+
+    let relatedDataRemovalResult = await interestingItemsController.removeItem(itemId, req.user._id);
+    if (relatedDataRemovalResult == null) {
+        res.status(500).json({
+            "error": "SERVER_ERROR"
+        });
+        return;
+    }
+
+    let result = await itemModel.deleteItem(itemId);
+    if (result == null) {
+        res.status(500).json({
+            "error": "SERVER_ERROR"
+        });
+        return;
+    }
+
+    res.json(result);
+}
+
+
 
 module.exports = {
     addItem,
     updateItem,
     updateNumOfInterestedUsers,
     setImageItem,
+    deleteItem,
     getUserItems,
     getUserUnswappedItems,
     getItemsByIds,

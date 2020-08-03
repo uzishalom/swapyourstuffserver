@@ -76,6 +76,12 @@ router.delete("/deleteinterestingitems/:itemIds", (req, res) => {
     })
 })
 
+router.delete("/delete/:id", (req, res) => {
+    authController.checkUserAuthentication(req, res, (req1, res1) => {
+        itemsController.deleteItem(req1, res1);
+    })
+})
+
 
 
 
