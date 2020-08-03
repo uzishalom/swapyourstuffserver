@@ -48,31 +48,21 @@ const deleteInterestingItemsForUser = async (itemIds, userId) => {
     return result;
 }
 
+// Removes any indication for an item. 
 const removeItem = async (itemId, userId) => {
     // remove all related items that the user suggested to swap with.
-    let removeRelatedResult = await InterestingItem.update(
+    await InterestingItem.updateMany(
         {
-            itemUserId: userId,
-            swapCandidateItems: { $in: [itemId] }
+            interestedUserId: userId,
         },
-        {
-            $pull:
-            {
-                swapCandidateItems:
-                    { $in: [itemId] }
-            }
-        }
+        { $pull: { swapCandidateItems: itemId } },
+        { multi: true }
     );
-    console.log(removeRelatedResult);
 
-    if (removeRelatedResult == null) {
-        return null;
-    }
 
     // remove all interesting items for an item
     let deleteResult = await InterestingItem.deleteMany({ itemId: itemId });
-    console.log(deleteReult);
-    return deleteResult;
+    return deleteResult.deletedCount;
 }
 
 

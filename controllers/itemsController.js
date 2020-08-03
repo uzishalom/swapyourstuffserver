@@ -123,7 +123,6 @@ const getItem = async (req, res) => {
 }
 
 
-
 const addItem = async (req, res) => {
 
     let itemToAdd = _.pick(req.body, ["title", "description", "categoryId"]);
@@ -216,6 +215,16 @@ const updateItem = async (req, res) => {
         return;
     }
 
+    const itemSwapped = itemToUpdate.swapped && !currentItem.swapped;
+    if (itemSwapped) {
+        let numOfDeletedRecords = await interestingItemsController.removeItem(itemToUpdate._id, req.user._id);
+        itemToUpdate.numOfInterestedUsers -= numOfDeletedRecords;
+        if (itemToUpdate.numOfInterestedUsers < 0) {
+            itemToUpdate.numOfInterestedUsers = 0;
+        }
+    }
+
+
     let updatedItem = await itemModel.updateItem(itemToUpdate);
     if (updatedItem == null) {
         res.status(500).json({
@@ -223,6 +232,7 @@ const updateItem = async (req, res) => {
         });
         return;
     }
+
 
     res.json(updatedItem);
 }

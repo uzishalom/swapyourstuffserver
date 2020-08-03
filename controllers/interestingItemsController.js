@@ -1,12 +1,13 @@
 const interestingItemModel = require("../models/interestingItemModel");
-const itemsController = require("./itemsController");
+const itemModel = require("../models/itemModel");
+
 
 const addInterestingItems = async (req, res) => {
 
     // Prepare Interesting Items Objects
     let interestingItemsToSave = req.body;
     const itemIds = interestingItemsToSave.map(interestingItem => interestingItem.itemId);
-    const items = await itemsController.getItemsByIds(itemIds);
+    const items = await itemModel.getItemsByIds(itemIds);
 
     let itemIdsToUserIds = [];
     items.forEach(item => {
@@ -27,7 +28,7 @@ const addInterestingItems = async (req, res) => {
         return;
     }
 
-    await itemsController.updateNumOfInterestedUsers(itemIds, true);
+    await itemModel.updateNumOfInterestedUsers(itemIds, true);
 
     res.json(insertedInterestingItems);
 }
@@ -42,23 +43,16 @@ const deleteInterestingItemsForUser = async (req, res) => {
         return;
     }
 
-    await itemsController.updateNumOfInterestedUsers(itemIdsToDelete, false)
+    await itemModel.updateNumOfInterestedUsers(itemIdsToDelete, false)
 
 
     res.json(result);
 }
 
 
-const removeItem = async (req, res) => {
-    let result = await interestingItemModel.removeItem(req.body.itemId, req.user._id);
-    if (result == null) {
-        res.status(500).json({
-            "error": "SERVER_ERROR"
-        });
-        return;
-    }
-
-    res.json(result);
+const removeItem = async (itemId, userId) => {
+    let result = await interestingItemModel.removeItem(itemId, userId);
+    return result;
 }
 
 const getUserInterestingItems = async (req, res) => {
