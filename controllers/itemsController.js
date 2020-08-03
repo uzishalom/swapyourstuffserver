@@ -1,5 +1,6 @@
 const itemModel = require("../models/itemModel");
 const categoriesController = require("./categoriesController");
+const interestingItemsController = require("./interestingItemsController");
 const Joi = require("joi-browser");
 const _ = require("loadsh");
 
@@ -68,6 +69,59 @@ const getUserNotInterestingItems = async (req, res) => {
     });
 
 }
+
+
+const getSuggestedSwapItems = async (req, res) => {
+    const itemId = req.params.id;
+
+    if (!itemId) {
+        res.status(400).json({
+            "error": "NO_ITEM"
+        });
+        return;
+    }
+
+    // Get all that are interested in this item
+    const interestingsForItem = await interestingItemsController.getAllInterestedForItem(itemId);
+    if (interestingsForItem == null) return null;
+
+    let suggestedToSwapItemIds = [];
+
+    interestingsForItem.forEach(interestingItem => {
+        interestingItem.swapCandidateItems.forEach(suggestedItemId => {
+            suggestedToSwapItemIds.push(suggestedItemId)
+        })
+    })
+
+    const result = await itemModel.getUnswappedItemsByIds(suggestedToSwapItemIds);
+    if (result == null) {
+        res.status(500).json({
+            "error": "SERVER_ERROR"
+        });
+        return;
+    }
+
+    res.json({
+        items: result
+    });
+
+}
+
+const getItem = async (req, res) => {
+    const result = await itemModel.getItemById(req.params.id);
+    if (result == null) {
+        res.status(500).json({
+            "error": "SERVER_ERROR"
+        });
+        return;
+    }
+
+    res.json({
+        item: result
+    });
+
+}
+
 
 
 const addItem = async (req, res) => {
@@ -224,16 +278,23 @@ const validateItemForUpdate = (item) => {
     });
 }
 
+const updateNumOfInterestedUsers = async (itemIds, add) => {
+    await itemModel.updateNumOfInterestedUsers(itemIds, add);
+}
+
 
 module.exports = {
     addItem,
     updateItem,
+    updateNumOfInterestedUsers,
     setImageItem,
     getUserItems,
     getUserUnswappedItems,
     getItemsByIds,
     getUserInterestingItems,
     getUserNotInterestingItems,
+    getSuggestedSwapItems,
+    getItem,
 }
 
 

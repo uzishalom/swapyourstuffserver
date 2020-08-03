@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const mongodbModel = require("./mongodbModel");
 
+
 const interestingItemSchema = mongodbModel.Schema({
     itemId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -29,14 +30,21 @@ const interestingItemSchema = mongodbModel.Schema({
 const InterestingItem = mongodbModel.model("InterestingItem", interestingItemSchema);
 
 const addInterestingItems = async (interestingItemObjs) => {
+    if (interestingItemObjs.length == 0) return null;
+
     let interestingItemsToAdd = interestingItemObjs.map(interestingItem => new InterestingItem(interestingItem));
 
     let result = await InterestingItem.insertMany(interestingItemsToAdd);
+
     return result;
 }
 
 const deleteInterestingItemsForUser = async (itemIds, userId) => {
+
+    if (itemIds.length == 0) return null;
+
     let result = await InterestingItem.deleteMany({ itemId: { $in: [...itemIds] }, interestedUserId: userId });
+
     return result;
 }
 
@@ -94,16 +102,6 @@ const getAllInterestedForItem = async (itemId) => {
     );
     return result;
 }
-
-
-
-
-
-
-
-
-
-
 
 
 module.exports = {

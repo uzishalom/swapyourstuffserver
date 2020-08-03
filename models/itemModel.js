@@ -64,6 +64,13 @@ const getItemsByIds = async (itemIds) => {
     return result;
 }
 
+const getUnswappedItemsByIds = async (itemIds) => {
+    let itemIdsAsObjectIds = itemIds.map(itemId => mongoose.Types.ObjectId(itemId));
+
+    let result = await Item.find({ _id: { $in: [...itemIdsAsObjectIds] }, swapped: false });
+    return result;
+}
+
 const getUserItems = async (userId) => {
     let result = await Item.find({ userId: userId }, [], {
         skip: 0,
@@ -135,14 +142,24 @@ const updateItem = async (itemToUpdate) => {
     return result;
 }
 
+const updateNumOfInterestedUsers = async (itemIds, add) => {
+    const numOfInterestedUsersToAdd = add ? 1 : -1;
+    let result = await Item.updateMany({ _id: { $in: [...itemIds] } }, { $inc: { numOfInterestedUsers: numOfInterestedUsersToAdd } })
+    return result;
+}
+
+
+
 module.exports = {
     getItemById,
     addItem,
     updateItem,
+    updateNumOfInterestedUsers,
     getUserItems,
     getUserUnswappedItems,
     getItemsByIds,
     getUserInterestingItems,
     getUserNotInterestingItems,
+    getUnswappedItemsByIds,
 }
 

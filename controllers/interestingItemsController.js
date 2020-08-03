@@ -27,6 +27,8 @@ const addInterestingItems = async (req, res) => {
         return;
     }
 
+    await itemsController.updateNumOfInterestedUsers(itemIds, true);
+
     res.json(insertedInterestingItems);
 }
 
@@ -39,6 +41,9 @@ const deleteInterestingItemsForUser = async (req, res) => {
         });
         return;
     }
+
+    await itemsController.updateNumOfInterestedUsers(itemIdsToDelete, false)
+
 
     res.json(result);
 }
@@ -68,17 +73,9 @@ const getUserInterestingItems = async (req, res) => {
     res.json({ userInterestingItems: result });
 }
 
-const getAllInterestedForItem = async (req, res) => {
-    let result = await interestingItemModel.getAllInterestedForItem(req.body.itemId);
-    if (result == null) {
-        res.status(500).json({
-            "error": "SERVER_ERROR"
-        });
-        return;
-    }
-
-    res.json({ interestedForItem: result });
-
+const getAllInterestedForItem = async (itemId) => {
+    let result = await interestingItemModel.getAllInterestedForItem(itemId);
+    return result;
 }
 
 module.exports = {
